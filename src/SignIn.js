@@ -3,7 +3,7 @@ import withRoot from './modules/withRoot';
 import React from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import Typography from './modules/components/Typography';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
@@ -53,12 +53,14 @@ function SignIn() {
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
-            Sign In
+            Entrar
           </Typography>
           <Typography variant="body2" align="center">
-            {'Not a member yet? '}
-            <Link href="/premium-themes/onepirate/sign-up/" align="center" underline="always">
-              Sign Up here
+            {'Ainda não tem uma conta? '}
+            <Link to="/registrar/" align="center">
+              <Typography align="center" color="inherit">
+                Faça sua conta aqui
+              </Typography>
             </Link>
           </Typography>
         </React.Fragment>
@@ -85,7 +87,7 @@ function SignIn() {
                 required
                 name="password"
                 autoComplete="current-password"
-                label="Password"
+                label="Senha"
                 type="password"
                 margin="normal"
               />
@@ -105,14 +107,14 @@ function SignIn() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'In progress…' : 'Sign In'}
+                {submitting || sent ? 'Aguarde…' : 'Entrar'}
               </FormButton>
             </form>
           )}
         </Form>
         <Typography align="center">
           <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
-            Forgot password?
+            Esqueceu a senha?
           </Link>
         </Typography>
       </AppForm>

@@ -3,7 +3,7 @@ import withRoot from './modules/withRoot';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Typography from './modules/components/Typography';
 import AppFooter from './modules/views/AppFooter';
@@ -54,11 +54,11 @@ function SignUp() {
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
-            Sign Up
+            Registrar
           </Typography>
           <Typography variant="body2" align="center">
-            <Link href="/premium-themes/onepirate/sign-in/" underline="always">
-              Already have an account?
+            <Link to="/login/">
+              <Typography color="inherit">Já tem uma conta?</Typography>
             </Link>
           </Typography>
         </React.Fragment>
@@ -72,7 +72,7 @@ function SignUp() {
                     component={RFTextField}
                     autoComplete="fname"
                     fullWidth
-                    label="First name"
+                    label="Nome"
                     name="firstName"
                     required
                   />
@@ -82,7 +82,7 @@ function SignUp() {
                     component={RFTextField}
                     autoComplete="lname"
                     fullWidth
-                    label="Last name"
+                    label="Sobrenome"
                     name="lastName"
                     required
                   />
@@ -105,7 +105,7 @@ function SignUp() {
                 required
                 name="password"
                 autoComplete="current-password"
-                label="Password"
+                label="Senha"
                 type="password"
                 margin="normal"
               />
@@ -124,7 +124,7 @@ function SignUp() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'In progress…' : 'Sign Up'}
+                {submitting || sent ? 'Aguarde…' : 'Registrar'}
               </FormButton>
             </form>
           )}
