@@ -1,18 +1,23 @@
-import withRoot from './modules/withRoot';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 // --- Post bootstrap -----
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Link } from 'react-router-dom';
 import { Field, Form, FormSpy } from 'react-final-form';
+import { Link } from 'react-router-dom';
+import { Radio } from 'final-form-material-ui';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
+import RFTextField from './modules/form/RFTextField';
+import { email, required } from './modules/form/validation';
+import AppAppBar from './modules/views/AppAppBar';
+import AppFooter from './modules/views/AppFooter';
+import AppForm from './modules/views/AppForm';
+import withRoot from './modules/withRoot';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -32,7 +37,7 @@ function SignUp() {
   const [sent, setSent] = React.useState(false);
 
   const validate = values => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values);
+    const errors = required(['firstName', 'lastName', 'email', 'password', 'tipo'], values);
 
     if (!errors.email) {
       const emailError = email(values.email, values);
@@ -44,8 +49,9 @@ function SignUp() {
     return errors;
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const onSubmit = value => {
+    console.log(value);
+    // setSent(true);
   };
 
   return (
@@ -56,15 +62,19 @@ function SignUp() {
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Registrar
           </Typography>
-          <Typography variant="body2" align="center">
-            <Link to="/login/">
-              <Typography color="inherit">Já tem uma conta?</Typography>
-            </Link>
-          </Typography>
+          <Link to="/login/">
+            <Typography variant="body2" align="center" color="inherit">
+              Já tem uma conta?
+            </Typography>
+          </Link>
         </React.Fragment>
-        <Form onSubmit={handleSubmit} subscription={{ submitting: true }} validate={validate}>
-          {({ handleSubmit2, submitting }) => (
-            <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+        <Form
+          onSubmit={onSubmit}
+          subscription={{ submitting: true }}
+          validate={validate}
+          initialValues={{ tipo: 'comprador' }}
+          render={({ handleSubmit, submitting }) => (
+            <form onSubmit={handleSubmit} className={classes.form} noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -109,6 +119,20 @@ function SignUp() {
                 type="password"
                 margin="normal"
               />
+              <FormControl component="fieldset">
+                <RadioGroup row>
+                  <FormControlLabel
+                    label="Comprador"
+                    control={<Field name="tipo" type="radio" component={Radio} value="comprador" />}
+                  />
+                  <FormControlLabel
+                    label="Fornecedor"
+                    control={
+                      <Field name="tipo" type="radio" component={Radio} value="fornecedor" />
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
                   submitError ? (
@@ -128,7 +152,7 @@ function SignUp() {
               </FormButton>
             </form>
           )}
-        </Form>
+        ></Form>
       </AppForm>
       <AppFooter />
     </React.Fragment>
