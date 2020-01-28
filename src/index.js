@@ -1,14 +1,5 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './Home';
-import Registrar from './SignUp';
-import Login from './SignIn'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import React from 'react';
+import App from './App';
 
-ReactDOM.render(<Router>
-    <Switch>
-        <Route path="/registrar" component={Registrar} />
-        <Route path="/login" component={Login} />
-        <Route path="/" component={Home} />
-    </Switch>
-</Router>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

@@ -1,13 +1,14 @@
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import { makeStyles } from '@material-ui/core/styles';
+import { Radio } from 'final-form-material-ui';
 // --- Post bootstrap -----
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Field, Form, FormSpy } from 'react-final-form';
 import { Link } from 'react-router-dom';
-import { Radio } from 'final-form-material-ui';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Typography from './modules/components/Typography';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
@@ -17,7 +18,7 @@ import AppAppBar from './modules/views/AppAppBar';
 import AppFooter from './modules/views/AppFooter';
 import AppForm from './modules/views/AppForm';
 import withRoot from './modules/withRoot';
-import { Divider } from '@material-ui/core';
+import AlertContext from './modules/components/AlertContext';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -34,7 +35,8 @@ const useStyles = makeStyles(theme => ({
 
 function SignUp() {
   const classes = useStyles();
-  const [sent, setSent] = React.useState(false);
+  const { alert } = React.useContext(AlertContext);
+  const history = useHistory();
 
   const validate = values => {
     const errors = required(['firstName', 'lastName', 'email', 'password', 'tipo'], values);
@@ -49,9 +51,26 @@ function SignUp() {
     return errors;
   };
 
-  const onSubmit = value => {
-    console.log(value);
-    // setSent(true);
+  const onSubmit = async value => {
+    const persist = () => {
+      return new Promise(
+        resolve => setTimeout(resolve, 1000),
+        reject => reject({ msg: 'teste' }),
+      );
+    };
+    try {
+      await persist();
+      alert({
+        severity: 'success',
+        msg: 'Cadastrado com sucesso',
+      });
+      history.push('/');
+    } catch (error) {
+      alert({
+        severity: 'error',
+        msg: error.msg,
+      });
+    }
   };
 
   return (
@@ -80,6 +99,7 @@ function SignUp() {
                   <Field
                     autoFocus
                     component={RFTextField}
+                    disabled={submitting}
                     autoComplete="fname"
                     fullWidth
                     label="Nome"
@@ -90,6 +110,7 @@ function SignUp() {
                 <Grid item xs={12} sm={6}>
                   <Field
                     component={RFTextField}
+                    disabled={submitting}
                     autoComplete="lname"
                     fullWidth
                     label="Sobrenome"
@@ -101,7 +122,7 @@ function SignUp() {
               <Field
                 autoComplete="email"
                 component={RFTextField}
-                disabled={submitting || sent}
+                disabled={submitting}
                 fullWidth
                 label="Email"
                 margin="normal"
@@ -111,7 +132,7 @@ function SignUp() {
               <Field
                 fullWidth
                 component={RFTextField}
-                disabled={submitting || sent}
+                disabled={submitting}
                 required
                 name="password"
                 autoComplete="current-password"
@@ -144,11 +165,11 @@ function SignUp() {
               </FormSpy>
               <FormButton
                 className={classes.button}
-                disabled={submitting || sent}
+                disabled={submitting}
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'Aguarde…' : 'Registrar'}
+                {submitting ? 'Aguarde…' : 'Registrar'}
               </FormButton>
             </form>
           )}

@@ -1,6 +1,6 @@
 import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
-import React from 'react';
+import React, { useContext } from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
+import AlertContext from './modules/components/AlertContext';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 function SignIn() {
   const classes = useStyles();
-  const [sent, setSent] = React.useState(false);
+  const { alert } = useContext(AlertContext);
 
   const validate = values => {
     const errors = required(['email', 'password'], values);
@@ -43,8 +44,23 @@ function SignIn() {
     return errors;
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const onSubmit = async () => {
+    const login = () => {
+      return new Promise(resolve => setTimeout(resolve, 1000));
+    };
+    try {
+      await login();
+      alert({
+        severity: 'success',
+        msg: 'Logado com sucesso',
+      });
+    } catch (error) {
+      alert({
+        severity: 'error',
+        msg: error.msg,
+      });
+    }
+    // setSent(true);
   };
 
   return (
@@ -57,21 +73,21 @@ function SignIn() {
           </Typography>
           <Typography variant="body2" align="center">
             {'Ainda não tem uma conta? '}
-            <Link to="/registrar/" align="center">
-              <Typography align="center" color="inherit">
-                Faça sua conta aqui
-              </Typography>
-            </Link>
           </Typography>
+          <Link to="/registrar/" align="center">
+            <Typography align="center" color="inherit">
+              Faça sua conta aqui
+            </Typography>
+          </Link>
         </React.Fragment>
-        <Form onSubmit={handleSubmit} subscription={{ submitting: true }} validate={validate}>
-          {({ handleSubmit2, submitting }) => (
-            <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+        <Form onSubmit={onSubmit} subscription={{ submitting: true }} validate={validate}>
+          {({ handleSubmit, submitting }) => (
+            <form onSubmit={handleSubmit} className={classes.form} noValidate>
               <Field
                 autoComplete="email"
                 autoFocus
                 component={RFTextField}
-                disabled={submitting || sent}
+                disabled={submitting}
                 fullWidth
                 label="Email"
                 margin="normal"
@@ -83,7 +99,7 @@ function SignIn() {
                 fullWidth
                 size="large"
                 component={RFTextField}
-                disabled={submitting || sent}
+                disabled={submitting}
                 required
                 name="password"
                 autoComplete="current-password"
@@ -102,20 +118,18 @@ function SignIn() {
               </FormSpy>
               <FormButton
                 className={classes.button}
-                disabled={submitting || sent}
+                disabled={submitting}
                 size="large"
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'Aguarde…' : 'Entrar'}
+                {submitting ? 'Aguarde…' : 'Entrar'}
               </FormButton>
             </form>
           )}
         </Form>
         <Typography align="center">
-          <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
-            Esqueceu a senha?
-          </Link>
+          <Link to="/">Esqueceu a senha?</Link>
         </Typography>
       </AppForm>
       <AppFooter />
